@@ -55,18 +55,16 @@ python src/inference.py --model kushalicious/SmolSocrates-360M
 
 ```
 ├── notebooks/
-│   └── socratic_tutor_finetune.ipynb  # Main training notebook (Colab)
+│   └── finetune.ipynb                 # Main training notebook (Colab)
 ├── data/
 │   ├── prepare_dataset.py             # Dataset download & processing
-│   ├── train_data.jsonl               # Training data (197 examples)
-│   └── eval_data.jsonl                # Evaluation data (30 examples)
+│   └── augment_dataset.py             # Synthetic data generation via Groq
 ├── eval/
 │   ├── rubric.py                      # Socratic quality scoring rubric
 │   └── evaluate.py                    # Full evaluation harness
 ├── src/
 │   └── inference.py                   # Interactive demo
-├── blog/
-│   └── post.md                        # Blog post draft
+├── evaluation_results.json            # Full benchmark results
 ├── requirements.txt
 └── README.md
 ```
@@ -102,7 +100,6 @@ Plus 2 LLM-judged dimensions (via Groq API):
 
 - 🤗 Model: [SmolSocrates-360M](https://huggingface.co/kushalicious/SmolSocrates-360M)
 - 📓 Colab: [Training Notebook](link-to-colab)
-- 📝 Blog: [Blog Post](link-to-blog)
 - 📦 Dataset: [PACT-Socratic-Coding-Tutor](https://huggingface.co/datasets/AndreiSobo/PACT-Socratic-Coding-Tutor)
 
 ## 📄 License
