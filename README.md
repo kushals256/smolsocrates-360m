@@ -4,9 +4,25 @@ Fine-tuned **SmolLM2-360M** to teach coding through Socratic questioning — nev
 
 > *"The only true wisdom is in knowing you know nothing."* — Socrates
 
-## 🎯 The Thesis
+## 🎯 The Thesis & The Story
 
-**Small specialist beats big generalist** — for narrow tasks, a 360M parameter model fine-tuned with LoRA can consistently follow pedagogical patterns that even much larger models struggle with out-of-the-box.
+**The Thesis:** Small specialist beats big generalist. For narrow tasks, a tiny 360M parameter model fine-tuned with LoRA can consistently follow pedagogical patterns that even much larger models struggle with out-of-the-box.
+
+**The Story:** We set out to prove this by fine-tuning SmolLM2-360M to be a "Socratic" coding tutor — one that refuses to give direct code answers and instead asks guiding questions. 
+
+**v1: The Initial Attempt (The Low Point)**
+We started with the HuggingFace `PACT-Socratic-Coding-Tutor` dataset, which contained 197 training examples. We applied LoRA (rank=16) and trained for 10 epochs. 
+The results were underwhelming:
+- The base model scored **2.2/9** on our Socratic rubric.
+- Our v1 fine-tuned model only improved to **4.8/9**.
+- Most glaringly, the v1 model still output complete code blocks in **40% of its responses**. The 197 examples simply weren't enough to override the base model's strong instinct to be a "helpful" AI that dumps code solutions.
+
+**v2: The Recovery (The Breakthrough)**
+To fix this, we needed more data and more model capacity.
+1. **Data Augmentation:** We wrote a script using the Groq API (Llama-3.1-8b) to generate 101 highly diverse, synthetic Socratic tutoring scenarios (debugging, concept explanation, code improvement). We strictly validated that the synthetic tutor responses contained *zero* code blocks and at least one question.
+2. **Increased Capacity:** We combined the datasets (298 total examples) and doubled the LoRA rank from `r=16` to `r=32` to give the model more trainable parameters to learn the new behavior.
+
+The results of v2 were spectacular. We hit our target score of **5.4/9** and achieved a **100% No-Code Rate**. The model completely stopped outputting code solutions, perfectly adopting the persona of a Socratic tutor.
 
 ## 📊 Results
 
