@@ -31,6 +31,7 @@ wandb/
 # Data (large files)
 data/*.parquet
 data/raw/
+data/*.jsonl
 
 # IDE
 .vscode/
