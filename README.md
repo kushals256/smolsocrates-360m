@@ -15,9 +15,6 @@ Fine-tuned **SmolLM2-360M** to teach coding through Socratic questioning — nev
 | Metric | Baseline (SmolLM2-360M) | Fine-tuned (SmolSocrates) | Improvement |
 |--------|------------------------|--------------------------|-------------|
 | Overall Score | 2.2/9 | 5.4/9 | +3.2 |
-| No Direct Answer | 1.6/3 | 3.0/3 | +1.4 |
-| Asks Questions | 0.4/3 | 1.0/3 | +0.6 |
-| Encouragement | 0.2/3 | 1.4/3 | +1.2 |
 | No-Code Rate | 40% | 100% | +60% |
 
 ### Before (Base Model)
@@ -81,7 +78,7 @@ python src/inference.py --model kushalicious/SmolSocrates-360M
 | Base Model | SmolLM2-360M-Instruct |
 | Method | LoRA (r=16, α=32) |
 | Trainable Params | ~2% of total |
-| Dataset | PACT-Socratic-Coding-Tutor (227 examples) |
+| Dataset | PACT-Socratic-Coding-Tutor + Synthetic (298 examples) |
 | Train/Eval Split | 298 / 30 |
 | Epochs | 10 |
 | Learning Rate | 5e-4 (cosine) |
