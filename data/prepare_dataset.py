@@ -57,28 +57,37 @@ def download_and_prepare(
         for msg in messages:
             if msg["role"] == "system":
                 # Replace with our standardized system prompt
-                processed_messages.append({
-                    "role": "system",
-                    "content": SYSTEM_PROMPT,
-                })
+                processed_messages.append(
+                    {
+                        "role": "system",
+                        "content": SYSTEM_PROMPT,
+                    }
+                )
                 has_system = True
             else:
-                processed_messages.append({
-                    "role": msg["role"],
-                    "content": msg["content"],
-                })
+                processed_messages.append(
+                    {
+                        "role": msg["role"],
+                        "content": msg["content"],
+                    }
+                )
 
         # Add system prompt if missing
         if not has_system:
-            processed_messages.insert(0, {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            })
+            processed_messages.insert(
+                0,
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT,
+                },
+            )
 
-        all_examples.append({
-            "id": f"pact_{i:04d}",
-            "messages": processed_messages,
-        })
+        all_examples.append(
+            {
+                "id": f"pact_{i:04d}",
+                "messages": processed_messages,
+            }
+        )
 
     # Shuffle and split
     random.seed(seed)

@@ -50,7 +50,6 @@ SCENARIOS = [
     "Student gets an AttributeError because they called a method on the wrong type",
     "Student's file reading code doesn't handle the file not existing",
     "Student's string comparison fails because of trailing whitespace",
-
     # --- Concept explanation scenarios ---
     "Student asks: What is the difference between a shallow copy and deep copy?",
     "Student asks: How do hash tables work internally?",
@@ -67,7 +66,6 @@ SCENARIOS = [
     "Student asks: What are lambda functions and when are they useful?",
     "Student asks: What is the difference between a process and a thread?",
     "Student asks: How does recursion differ from iteration?",
-
     # --- Code improvement scenarios ---
     "Student has working code that uses nested for loops but could use a dictionary for O(1) lookup",
     "Student wrote a function that's 50 lines long and should be broken into smaller functions",
@@ -84,7 +82,6 @@ SCENARIOS = [
     "Student's variable names are single letters (x, y, n) making code unreadable",
     "Student is using a list where a set would be more efficient for membership checks",
     "Student's code passes but uses O(n²) approach where O(n) is straightforward",
-
     # --- Additional diverse scenarios ---
     "Student is confused about why their API request returns a 403 error",
     "Student doesn't understand why their regex pattern isn't matching",
@@ -171,13 +168,13 @@ def generate_examples(
 
             # Validate: tutor response must NOT contain code blocks
             if "```" in parsed["tutor"]:
-                print(f"   ⚠️  [{i+1}] Skipping — tutor response contains code block")
+                print(f"   ⚠️  [{i + 1}] Skipping — tutor response contains code block")
                 errors += 1
                 continue
 
             # Validate: tutor response MUST contain at least one question
             if "?" not in parsed["tutor"]:
-                print(f"   ⚠️  [{i+1}] Skipping — tutor response has no questions")
+                print(f"   ⚠️  [{i + 1}] Skipping — tutor response has no questions")
                 errors += 1
                 continue
 
@@ -192,17 +189,17 @@ def generate_examples(
             examples.append(example)
 
             if (i + 1) % 10 == 0:
-                print(f"   ✅ Generated {i+1}/{num_examples} ({errors} skipped)")
+                print(f"   ✅ Generated {i + 1}/{num_examples} ({errors} skipped)")
 
             # Rate limiting — Groq free tier is generous but let's be safe
             time.sleep(1.0)
 
         except json.JSONDecodeError as e:
-            print(f"   ⚠️  [{i+1}] JSON parse error: {e}")
+            print(f"   ⚠️  [{i + 1}] JSON parse error: {e}")
             errors += 1
             time.sleep(1.0)
         except Exception as e:
-            print(f"   ❌ [{i+1}] Error: {e}")
+            print(f"   ❌ [{i + 1}] Error: {e}")
             errors += 1
             time.sleep(2.0)
 

@@ -128,6 +128,7 @@ def _default_llm_scores() -> list[RubricScore]:
 
 # --- Model Inference ---
 
+
 def generate_response(
     model_name: str,
     messages: list[dict],
@@ -183,6 +184,7 @@ def generate_response_groq_baseline(
 
 # --- Main Evaluation ---
 
+
 def evaluate_model(
     model_name: str,
     eval_data_path: str = "data/eval_data.jsonl",
@@ -223,6 +225,7 @@ def evaluate_model(
     if use_local_model:
         print("   Loading model...")
         from transformers import pipeline
+
         pipe = pipeline(
             "text-generation",
             model=model_name,
@@ -255,7 +258,7 @@ def evaluate_model(
             eval_msgs.append(first_user)
             user_prompt = first_user["content"]
 
-        print(f"\n   [{i+1}/{len(eval_data)}] {test_id}")
+        print(f"\n   [{i + 1}/{len(eval_data)}] {test_id}")
         print(f"   Prompt: {user_prompt[:80]}...")
 
         # Generate response
@@ -296,7 +299,9 @@ def evaluate_model(
             scores=scores,
         )
         results.append(result)
-        print(f"   Score: {result.total_score}/{result.max_score} ({result.percentage}%)")
+        print(
+            f"   Score: {result.total_score}/{result.max_score} ({result.percentage}%)"
+        )
 
     # Summary
     _print_summary(results, model_name)
@@ -333,15 +338,19 @@ def _print_summary(results: list[EvalResult], model_name: str):
     print(f"📊 EVALUATION SUMMARY: {model_name}")
     print("=" * 60)
 
-    print(f"\n   Overall Score: {summary['avg_total']:.1f}/{summary['max_score']} "
-          f"({summary['avg_percentage']:.1f}%)")
+    print(
+        f"\n   Overall Score: {summary['avg_total']:.1f}/{summary['max_score']} "
+        f"({summary['avg_percentage']:.1f}%)"
+    )
 
     print(f"\n   Per-Dimension Averages:")
     for dim_name, avg_score in summary["per_dimension"].items():
         bar = "█" * int(avg_score) + "░" * (3 - int(avg_score))
         print(f"      {dim_name:25s}  {avg_score:.1f}/3  {bar}")
 
-    print(f"\n   No-Code Rate: {summary['no_code_rate']:.0f}% of responses contain zero code blocks")
+    print(
+        f"\n   No-Code Rate: {summary['no_code_rate']:.0f}% of responses contain zero code blocks"
+    )
     print("=" * 60)
 
 
@@ -363,9 +372,9 @@ def _compute_summary(results: list[EvalResult]) -> dict:
 
     # No-code rate (% of responses with 0 code blocks)
     import re
+
     no_code_count = sum(
-        1 for r in results
-        if len(re.findall(r"```[\s\S]*?```", r.response)) == 0
+        1 for r in results if len(re.findall(r"```[\s\S]*?```", r.response)) == 0
     )
 
     return {
@@ -381,6 +390,7 @@ def _compute_summary(results: list[EvalResult]) -> dict:
 
 # --- Comparison ---
 
+
 def compare_results(baseline_path: str, finetuned_path: str):
     """Print a side-by-side comparison of baseline vs fine-tuned results."""
     with open(baseline_path) as f:
@@ -395,18 +405,21 @@ def compare_results(baseline_path: str, finetuned_path: str):
     print("📊 BEFORE vs AFTER COMPARISON")
     print("=" * 70)
     print(f"\n   {'Metric':<30s} {'Baseline':>10s} {'Fine-tuned':>12s} {'Delta':>8s}")
-    print(f"   {'-'*30} {'-'*10} {'-'*12} {'-'*8}")
+    print(f"   {'-' * 30} {'-' * 10} {'-' * 12} {'-' * 8}")
 
     # Overall
     b_avg = b_summary["avg_total"]
     f_avg = f_summary["avg_total"]
     delta = f_avg - b_avg
     sign = "+" if delta > 0 else ""
-    print(f"   {'Overall Score':<30s} {b_avg:>10.1f} {f_avg:>12.1f} {sign}{delta:>7.1f}")
+    print(
+        f"   {'Overall Score':<30s} {b_avg:>10.1f} {f_avg:>12.1f} {sign}{delta:>7.1f}"
+    )
 
     # Per dimension
-    all_dims = set(b_summary.get("per_dimension", {}).keys()) | \
-               set(f_summary.get("per_dimension", {}).keys())
+    all_dims = set(b_summary.get("per_dimension", {}).keys()) | set(
+        f_summary.get("per_dimension", {}).keys()
+    )
 
     for dim in sorted(all_dims):
         b_val = b_summary.get("per_dimension", {}).get(dim, 0)
@@ -420,7 +433,9 @@ def compare_results(baseline_path: str, finetuned_path: str):
     f_ncr = f_summary.get("no_code_rate", 0)
     delta = f_ncr - b_ncr
     sign = "+" if delta > 0 else ""
-    print(f"   {'No-Code Rate (%)':<30s} {b_ncr:>10.0f} {f_ncr:>12.0f} {sign}{delta:>7.0f}")
+    print(
+        f"   {'No-Code Rate (%)':<30s} {b_ncr:>10.0f} {f_ncr:>12.0f} {sign}{delta:>7.0f}"
+    )
 
     print("\n" + "=" * 70)
 
@@ -440,21 +455,38 @@ def compare_results(baseline_path: str, finetuned_path: str):
 
 # --- CLI ---
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate SmolSocrates Socratic tutoring quality")
+    parser = argparse.ArgumentParser(
+        description="Evaluate SmolSocrates Socratic tutoring quality"
+    )
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
     # Evaluate command
     eval_parser = subparsers.add_parser("eval", help="Run evaluation on a model")
-    eval_parser.add_argument("--model", required=True, help="HuggingFace model name or path")
-    eval_parser.add_argument("--eval-data", default="data/eval_data.jsonl", help="Path to eval data")
-    eval_parser.add_argument("--output", required=True, help="Path to save results JSON")
-    eval_parser.add_argument("--no-llm-judge", action="store_true", help="Disable LLM-as-judge scoring")
-    eval_parser.add_argument("--groq", action="store_true", help="Use Groq API instead of local model")
-    eval_parser.add_argument("--max-examples", type=int, default=None, help="Limit eval examples")
+    eval_parser.add_argument(
+        "--model", required=True, help="HuggingFace model name or path"
+    )
+    eval_parser.add_argument(
+        "--eval-data", default="data/eval_data.jsonl", help="Path to eval data"
+    )
+    eval_parser.add_argument(
+        "--output", required=True, help="Path to save results JSON"
+    )
+    eval_parser.add_argument(
+        "--no-llm-judge", action="store_true", help="Disable LLM-as-judge scoring"
+    )
+    eval_parser.add_argument(
+        "--groq", action="store_true", help="Use Groq API instead of local model"
+    )
+    eval_parser.add_argument(
+        "--max-examples", type=int, default=None, help="Limit eval examples"
+    )
 
     # Compare command
-    cmp_parser = subparsers.add_parser("compare", help="Compare baseline vs fine-tuned results")
+    cmp_parser = subparsers.add_parser(
+        "compare", help="Compare baseline vs fine-tuned results"
+    )
     cmp_parser.add_argument("baseline", help="Path to baseline results JSON")
     cmp_parser.add_argument("finetuned", help="Path to fine-tuned results JSON")
 

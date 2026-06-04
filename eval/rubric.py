@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 @dataclass
 class RubricScore:
     """Score for a single evaluation dimension."""
+
     name: str
     score: int  # 0-3
     explanation: str
@@ -27,6 +28,7 @@ class RubricScore:
 @dataclass
 class EvalResult:
     """Complete evaluation result for a single test case."""
+
     test_id: str
     prompt: str
     response: str
@@ -65,6 +67,7 @@ class EvalResult:
 
 # --- Rule-Based Heuristic Scorers ---
 
+
 def score_no_direct_answer(response: str) -> RubricScore:
     """
     Score 0-3: Does the response avoid giving direct code solutions?
@@ -97,29 +100,36 @@ def score_no_direct_answer(response: str) -> RubricScore:
         "simply use",
         "just use",
     ]
-    has_solution_phrase = any(
-        phrase in response.lower() for phrase in solution_phrases
-    )
+    has_solution_phrase = any(phrase in response.lower() for phrase in solution_phrases)
 
     if len(code_blocks) >= 2 or (len(code_blocks) >= 1 and has_solution_phrase):
-        return RubricScore("No Direct Answer", 0,
-                           f"Contains {len(code_blocks)} code block(s) with solution language")
+        return RubricScore(
+            "No Direct Answer",
+            0,
+            f"Contains {len(code_blocks)} code block(s) with solution language",
+        )
     elif len(code_blocks) == 1:
         # Check if it's a short illustrative snippet vs. full solution
         block_content = code_blocks[0]
         lines = block_content.strip().split("\n")
         if len(lines) <= 3:
-            return RubricScore("No Direct Answer", 2,
-                               "Has a small illustrative code snippet")
+            return RubricScore(
+                "No Direct Answer", 2, "Has a small illustrative code snippet"
+            )
         else:
-            return RubricScore("No Direct Answer", 1,
-                               f"Has a code block with {len(lines)} lines")
+            return RubricScore(
+                "No Direct Answer", 1, f"Has a code block with {len(lines)} lines"
+            )
     elif len(inline_code) > 5:
-        return RubricScore("No Direct Answer", 2,
-                           f"No code blocks but {len(inline_code)} inline code references")
+        return RubricScore(
+            "No Direct Answer",
+            2,
+            f"No code blocks but {len(inline_code)} inline code references",
+        )
     else:
-        return RubricScore("No Direct Answer", 3,
-                           "No code solutions provided — purely guiding text")
+        return RubricScore(
+            "No Direct Answer", 3, "No code solutions provided — purely guiding text"
+        )
 
 
 def score_asks_questions(response: str) -> RubricScore:
@@ -139,26 +149,43 @@ def score_asks_questions(response: str) -> RubricScore:
     ]
     # Also check for question-starting phrases
     question_starters = [
-        "what", "why", "how", "can you", "could you", "have you",
-        "do you", "did you", "would", "which", "where", "when",
+        "what",
+        "why",
+        "how",
+        "can you",
+        "could you",
+        "have you",
+        "do you",
+        "did you",
+        "would",
+        "which",
+        "where",
+        "when",
     ]
     strong_questions = [
-        q for q in questions
+        q
+        for q in questions
         if any(q.strip().lower().startswith(s) for s in question_starters)
     ]
 
     if len(strong_questions) >= 3:
-        return RubricScore("Asks Questions", 3,
-                           f"Contains {len(strong_questions)} strong guiding questions")
+        return RubricScore(
+            "Asks Questions",
+            3,
+            f"Contains {len(strong_questions)} strong guiding questions",
+        )
     elif len(strong_questions) >= 1:
-        return RubricScore("Asks Questions", 2,
-                           f"Contains {len(strong_questions)} guiding question(s)")
+        return RubricScore(
+            "Asks Questions", 2, f"Contains {len(strong_questions)} guiding question(s)"
+        )
     elif response.count("?") >= 1:
-        return RubricScore("Asks Questions", 1,
-                           "Has question marks but questions may be weak/rhetorical")
+        return RubricScore(
+            "Asks Questions",
+            1,
+            "Has question marks but questions may be weak/rhetorical",
+        )
     else:
-        return RubricScore("Asks Questions", 0,
-                           "No questions found in response")
+        return RubricScore("Asks Questions", 0, "No questions found in response")
 
 
 def score_encouragement(response: str) -> RubricScore:
@@ -171,42 +198,70 @@ def score_encouragement(response: str) -> RubricScore:
     0 = Negative, dismissive, or condescending
     """
     encouraging_phrases = [
-        "great", "good", "nice", "well done", "excellent", "perfect",
-        "you're on the right track", "that's a good", "i see you",
-        "interesting", "let's", "let us", "we can", "you can",
-        "keep going", "almost", "close", "think about", "consider",
-        "try thinking", "good question", "good start", "you've got",
-        "💡", "🎯", "✨", "👍", "that's right", "exactly",
+        "great",
+        "good",
+        "nice",
+        "well done",
+        "excellent",
+        "perfect",
+        "you're on the right track",
+        "that's a good",
+        "i see you",
+        "interesting",
+        "let's",
+        "let us",
+        "we can",
+        "you can",
+        "keep going",
+        "almost",
+        "close",
+        "think about",
+        "consider",
+        "try thinking",
+        "good question",
+        "good start",
+        "you've got",
+        "💡",
+        "🎯",
+        "✨",
+        "👍",
+        "that's right",
+        "exactly",
     ]
     negative_phrases = [
-        "wrong", "incorrect", "that's bad", "you should know",
-        "obviously", "clearly you", "that's not how", "no,",
+        "wrong",
+        "incorrect",
+        "that's bad",
+        "you should know",
+        "obviously",
+        "clearly you",
+        "that's not how",
+        "no,",
     ]
 
-    pos_count = sum(
-        1 for phrase in encouraging_phrases
-        if phrase in response.lower()
-    )
-    neg_count = sum(
-        1 for phrase in negative_phrases
-        if phrase in response.lower()
-    )
+    pos_count = sum(1 for phrase in encouraging_phrases if phrase in response.lower())
+    neg_count = sum(1 for phrase in negative_phrases if phrase in response.lower())
 
     if neg_count >= 2:
-        return RubricScore("Encouragement", 0,
-                           f"Contains {neg_count} negative/dismissive phrases")
+        return RubricScore(
+            "Encouragement", 0, f"Contains {neg_count} negative/dismissive phrases"
+        )
     elif pos_count >= 3:
-        return RubricScore("Encouragement", 3,
-                           f"Contains {pos_count} encouraging phrases — warm tone")
+        return RubricScore(
+            "Encouragement", 3, f"Contains {pos_count} encouraging phrases — warm tone"
+        )
     elif pos_count >= 1:
-        return RubricScore("Encouragement", 2,
-                           f"Contains {pos_count} encouraging phrase(s)")
+        return RubricScore(
+            "Encouragement", 2, f"Contains {pos_count} encouraging phrase(s)"
+        )
     elif neg_count == 0:
-        return RubricScore("Encouragement", 1,
-                           "Neutral tone — no negative language but limited encouragement")
+        return RubricScore(
+            "Encouragement",
+            1,
+            "Neutral tone — no negative language but limited encouragement",
+        )
     else:
-        return RubricScore("Encouragement", 0,
-                           "Negative or dismissive tone detected")
+        return RubricScore("Encouragement", 0, "Negative or dismissive tone detected")
 
 
 def score_rule_based(response: str) -> list[RubricScore]:
