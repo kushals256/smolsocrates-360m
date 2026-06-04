@@ -1,0 +1,18 @@
+# Core ML
+transformers>=4.40.0
+datasets>=2.18.0
+peft>=0.10.0
+trl>=0.8.0
+accelerate>=0.28.0
+bitsandbytes>=0.43.0
+torch>=2.1.0
+
+# HuggingFace Hub
+huggingface_hub>=0.22.0
+
+# Evaluation
+groq>=0.5.0
+python-dotenv>=1.0.0
+
+# Utilities
+tqdm>=4.66.0

@@ -1,0 +1,47 @@
+# Environment
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ML outputs
+outputs/
+checkpoints/
+runs/
+wandb/
+*.gguf
+
+# Data (large files)
+data/*.parquet
+data/raw/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Results (regeneratable)
+eval/results/*.json

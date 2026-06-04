@@ -1,0 +1,152 @@
+{
+  "model_name": "kushalicious/SmolSocrates-360M",
+  "base_model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "lora_config": {
+    "r": 32,
+    "lora_alpha": 64
+  },
+  "training": {
+    "dataset": "PACT + synthetic augmentation",
+    "train_examples": 298,
+    "eval_examples": 30,
+    "epochs": 10,
+    "learning_rate": 0.0005
+  },
+  "baseline_avg": 2.2,
+  "finetuned_avg": 5.4,
+  "improvement": 3.2,
+  "baseline_results": [
+    {
+      "prompt": "How do I reverse a string in Python?",
+      "response": "You can reverse a string in Python using the following methods:\n\n1. Using the `reversed` function:\n\n```python\ndef reverse_string(input_str):\n    return \"\".join(reversed(input_str))\n\ninput_str = \"Hello\"\nprint(reverse_string(input_str))  # Outputs: \"olleH\"\n```\n\n2. Using slicing:\n\n```python\ndef reverse_string(input_str):\n    return input_str[::-1]\n\ninput_str = \"Hello\"\nprint(reverse_string(input_str))  # Outputs: \"olleH\"\n```\n\n3. Using a loop:\n\n```python\ndef reverse_string(input_str):\n    reversed_str = \"\"\n    for char in input_str:\n        reversed_str += char\n    return reversed_str\n\ninput_str = \"Hello\"\nprint(reverse_string(input_str))  # Outputs: \"olleH\"\n```\n\nChoose the method that best fits your needs. The slicing method is more efficient and easy to understand, but it may not be the best solution if you need to reverse a",
+      "score": {
+        "no_code": 0,
+        "questions": 0,
+        "encouragement": 0,
+        "total": 0,
+        "max": 9,
+        "code_blocks": 3,
+        "num_questions": 0
+      }
+    },
+    {
+      "prompt": "My for loop never stops running. Here's my code:\n```python\ni = 0\nwhile i < 10:\n    print(i)\n```\nWhat's wrong?",
+      "response": "The issue is with the condition of your while loop. You're iterating over the range of numbers from 0 to 9, which is a single-digit range. This is not what you want, as it's not a valid range for a for loop.\n\nThe correct range for a for loop is from 0 to 9. You should change your while loop to:\n\n```python\ni = 0\nwhile i < 10:\n    print(i)\n```\n\nThis will print all numbers from 0 to 9, which is exactly what you want.",
+      "score": {
+        "no_code": 1,
+        "questions": 0,
+        "encouragement": 0,
+        "total": 1,
+        "max": 9,
+        "code_blocks": 1,
+        "num_questions": 0
+      }
+    },
+    {
+      "prompt": "What's the difference between a list and a tuple in Python?",
+      "response": "In Python, the difference between a list and a tuple is primarily one of data structure and order.\n\nA list is a collection of items that can be of any data type, including strings, integers, floats, and even other lists. Lists are ordered, meaning that the order of elements in the list matters.\n\nOn the other hand, a tuple is a collection of items that can be of any data type, including strings, integers, floats, and even other tuples. Tuples are unordered, meaning that the order of elements in the tuple does not matter.\n\nHere are some key differences:\n\n- **Order**: Lists are ordered, while tuples are unordered.\n- **Data type**: Lists can contain elements of different data types, while tuples can only contain elements of the same data type.\n- **Performance**: Tuples are faster than lists because they are immutable, meaning their contents cannot be modified after creation.\n- **Use cases**: Lists are better suited for dynamic collections of data, while tuples are better suited for data that needs to be preserved for future use or conversions to other data types.\n\nHere's an example to illustrate the difference:\n\n```python\n# List\nmy_list = [1",
+      "score": {
+        "no_code": 3,
+        "questions": 0,
+        "encouragement": 0,
+        "total": 3,
+        "max": 9,
+        "code_blocks": 0,
+        "num_questions": 0
+      }
+    },
+    {
+      "prompt": "I'm getting an IndexError in my code. How do I fix it?",
+      "response": "The most likely cause for an IndexError is that you are trying to access or modify a variable that does not exist in your code. Check for any typos or missing brackets, and make sure you are using the correct variable name.\n\nFor example, if you are trying to access a variable called `my_var`, make sure it exists in your code before attempting to access it.\n\nAdditionally, you can try to make your code more specific by providing more details. For example, you can ask a question like \"Can you please tell me what the error is and what variable name is causing it?\"\n\nIf you are still having trouble, you can try using the following steps:\n\n- Check for typos or missing brackets\n- Ensure the variable name exists in your code\n- Ensure you are using the correct variable name\n\nFor example, if you are trying to access `my_var` in your code, make sure it exists in your code before attempting to access it.\n\nAdditionally, you can try to make your code more specific by providing more details. For example, you can ask a question like \"Can you please tell me what the error is and what variable name is causing it?\"\n\nIf you are still having trouble",
+      "score": {
+        "no_code": 3,
+        "questions": 2,
+        "encouragement": 1,
+        "total": 6,
+        "max": 9,
+        "code_blocks": 0,
+        "num_questions": 2
+      }
+    },
+    {
+      "prompt": "Can you explain recursion to me? I don't get it.",
+      "response": "Recursion is a programming technique where a function calls itself repeatedly until it reaches a base case that stops the recursion. It's a way to solve problems by breaking them down into smaller sub-problems, which are then solved by the same function.\n\nHere's a simple example:\n\nSuppose you want to calculate the factorial of a number. The factorial of a number `n`, denoted as `n!`, is the product of all positive integers less than or equal to `n`. For example, `4! = 4 * 3 * 2 * 1 = 24`.\n\nHere's a recursive function in Python that calculates the factorial of a number:\n\n```python\ndef factorial(n):\n    if n == 0 or n == 1:\n        return 1\n    else:\n        return n * factorial(n-1)\n\nprint(factorial(5))  # Output: 120\n```\n\nThis function works by checking if the input `n` is 0 or 1. If it is, the function returns 1, since the factorial of 0 or 1 is 1. For all other numbers, the function calls",
+      "score": {
+        "no_code": 1,
+        "questions": 0,
+        "encouragement": 0,
+        "total": 1,
+        "max": 9,
+        "code_blocks": 1,
+        "num_questions": 0
+      }
+    }
+  ],
+  "finetuned_results": [
+    {
+      "prompt": "How do I reverse a string in Python?",
+      "response": "You're on the right track by thinking about what it means for a string to be reversed. Think about what reversing a string involves. What changes happen to each character when you swap the positions of the characters? What do you need to do to undo that reversal? Can you think of a simple way to implement a reversal in your own code?",
+      "score": {
+        "no_code": 3,
+        "questions": 1,
+        "encouragement": 1,
+        "total": 5,
+        "max": 9,
+        "code_blocks": 0,
+        "num_questions": 1
+      }
+    },
+    {
+      "prompt": "My for loop never stops running. Here's my code:\n```python\ni = 0\nwhile i < 10:\n    print(i)\n```\nWhat's wrong?",
+      "response": "You're trying to avoid infinite loops by using a while loop with a condition that doesn't meet the requirements. Can you think of what it would be called when you have a condition that never gets reset?",
+      "score": {
+        "no_code": 3,
+        "questions": 1,
+        "encouragement": 1,
+        "total": 5,
+        "max": 9,
+        "code_blocks": 0,
+        "num_questions": 1
+      }
+    },
+    {
+      "prompt": "What's the difference between a list and a tuple in Python?",
+      "response": "Can you think of a situation where you'd want to use one over the other? Are you familiar with how Python handles these types?",
+      "score": {
+        "no_code": 3,
+        "questions": 1,
+        "encouragement": 0,
+        "total": 4,
+        "max": 9,
+        "code_blocks": 0,
+        "num_questions": 1
+      }
+    },
+    {
+      "prompt": "I'm getting an IndexError in my code. How do I fix it?",
+      "response": "It sounds like you're on the right track in troubleshooting this issue. Can you think about what you might be doing differently to catch this error, versus what the error itself is telling you? What might be a good place to start debugging?",
+      "score": {
+        "no_code": 3,
+        "questions": 1,
+        "encouragement": 2,
+        "total": 6,
+        "max": 9,
+        "code_blocks": 0,
+        "num_questions": 1
+      }
+    },
+    {
+      "prompt": "Can you explain recursion to me? I don't get it.",
+      "response": "It's great that you're asking about recursion. What do you think it is and how does it differ from other types of loops? Think about what happens when you're trying to make a calculation that gets bigger and bigger - do you think that makes it harder to understand?",
+      "score": {
+        "no_code": 3,
+        "questions": 1,
+        "encouragement": 3,
+        "total": 7,
+        "max": 9,
+        "code_blocks": 0,
+        "num_questions": 1
+      }
+    }
+  ]
+}
